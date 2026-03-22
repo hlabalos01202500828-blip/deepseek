@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BES 103: Algorithm Development | Interactive Study Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            line-height: 1.5;
+            color: #0f172a;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* header & tabs */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: #334155;
+            margin-top: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #475569;
+        }
+
+        .tab-btn.active {
+            background: #1e3c72;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #e2e8f0;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fade 0.25s ease;
+        }
+
+        .tab-pane.active-pane {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* card style */
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border-left: 5px solid #1e3c72;
+            padding-left: 1rem;
+            color: #0f172a;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .bullet-list li {
+            margin-bottom: 0.6rem;
+            padding-left: 1.4rem;
+            position: relative;
+        }
+        .bullet-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: #1e3c72;
+            font-weight: bold;
+        }
+
+        .badge {
+            background: #eef2ff;
+            color: #1e3c72;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* quiz styles */
+        .quiz-question {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #e2e8f0;
+            transition: 0.1s;
+        }
+        .question-text {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .q-type {
+            font-size: 0.7rem;
+            background: #cbd5e1;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: normal;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .option label {
+            margin-left: 0.5rem;
+            font-weight: 400;
+        }
+        input, textarea, select {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+            font-family: inherit;
+        }
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #1e3c72;
+            color: #1e3c72;
+        }
+        .btn-outline:hover {
+            background: #eef2ff;
+        }
+        .btn:hover {
+            background: #0f2b4f;
+        }
+        .score-area {
+            background: #e6f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 1.2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 1px solid #e2e8f0;
+        }
+        .flashcard:hover {
+            transform: scale(1.01);
+            background: #fefce8;
+        }
+        .flash-term {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        .flash-def {
+            font-size: 1.1rem;
+            color: #2d3e50;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+        @media (max-width: 640px) {
+            .card { padding: 1rem; }
+            .question-text { font-size: 0.95rem; }
+        }
+        hr {
+            margin: 1rem 0;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📘 BES 103 · Algorithm Development</h1>
+        <p>Study guide + interactive quiz + active recall flashcards</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="guide">📖 Study Guide</button>
+        <button class="tab-btn" data-tab="quiz">✍️ Quiz (70+ auto-graded)</button>
+        <button class="tab-btn" data-tab="flashcards">🃏 Active Recall · Flashcards</button>
+    </div>
+
+    <!-- ========= STUDY GUIDE PANE ========= -->
+    <div id="guide" class="tab-pane active-pane">
+        <div class="card">
+            <div class="section-title">🎯 Core Concepts</div>
+            <div class="grid-2">
+                <div>
+                    <h3>🔹 Algorithm</h3>
+                    <p>Finite, ordered sequence of unambiguous steps solving a problem.</p>
+                    <h3 class="mt-3">🔹 Two Phases</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Problem-solving</strong> → create algorithm</li>
+                        <li><strong>Implementation</strong> → code in programming language</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🔹 Representations</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Pseudocode:</strong> informal English-like</li>
+                        <li><strong>Flowchart:</strong> graphical (ovals, rectangles, diamonds)</li>
+                    </ul>
+                    <h3>🔹 Control Structures</h3>
+                    <ul class="bullet-list">
+                        <li>Sequence → step-by-step</li>
+                        <li>Decision (if-then-else)</li>
+                        <li>Loop (while, for)</li>
+                        <li>Case (multi-selection)</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div><span class="badge">Flowchart symbols</span> Oval: Start/Stop &nbsp;|&nbsp; Rectangle: Process &nbsp;|&nbsp; Parallelogram: I/O &nbsp;|&nbsp; Diamond: Decision</div>
+            <div class="section-title mt-3">🧠 Quadratic Equation & USEP Grade Example</div>
+            <p><strong>Discriminant (D = b²-4ac)</strong> → D>0: real & unequal; D=0: real & equal; D<0: imaginary. <br>
+            <strong>USEP Grade:</strong> 97-100% = 1.0 (Passed), 75% = 3.0, below 75 = 5.0 Failed.</p>
+            <div class="section-title">📌 Stepwise Refinement</div>
+            <p>Start with general algorithm → refine to detailed steps close to code.</p>
+        </div>
+    </div>
+
+    <!-- ========= QUIZ PANE ========= -->
+    <div id="quiz" class="tab-pane">
+        <div class="card">
+            <div class="section-title">📝 Interactive Quiz (70 auto-graded + 2 coding challenges)</div>
+            <div id="quiz-container"></div>
+            <div id="quiz-pagination" class="flex-between" style="margin-top: 1rem;"></div>
+            <div id="quiz-score-area" class="score-area" style="display: none;"></div>
+            <div class="quiz-nav">
+                <button id="prevQuizPage" class="btn btn-outline">◀ Previous</button>
+                <span id="pageIndicator"></span>
+                <button id="nextQuizPage" class="btn">Next ▶</button>
+                <button id="submitQuiz" class="btn" style="background: #2b5e3b;">✅ Submit & Score</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="section-title">💻 Coding Challenges (self-check)</div>
+            <div><strong>Quadratic Equation Solver</strong><br>See reference algorithm in study guide – implement using discriminant logic.<br>
+            <div class="code-block">// pseudocode reference<br>INPUT a,b,c<br>D = b*b - 4*a*c<br>IF D>0: real unequal roots ...</div></div>
+            <div class="mt-3"><strong>USEP Grade Equivalent</strong><br>Use nested if/else or case structure to map percentage to grade & remark.</div>
+        </div>
+    </div>
+
+    <!-- ========= FLASHCARDS PANE ========= -->
+    <div id="flashcards" class="tab-pane">
+        <div class="card">
+            <div class="section-title">🃏 Active Recall Game</div>
+            <p style="margin-bottom: 1rem;">Click on a card to flip between term and definition. Test your memory!</p>
+            <div id="flashcard-grid" class="grid-2" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));"></div>
+            <div class="flex-between" style="margin-top: 1.5rem;">
+                <button id="resetFlashcards" class="btn btn-outline">🔄 Reset all cards</button>
+                <span id="flashHint">👉 click any card</span>
+            </div>
+        </div>
+    </div>
+    <footer>BES103 Algorithm Development — interactive learning tool | auto-graded quiz + flashcards</footer>
+</div>
+
+<script>
+    // ----------------------------- QUIZ DATA (70 auto-graded questions) ---------------------------------
+    // Based on provided material: multiple choice, true/false, identification, short answer, flowchart analysis
+    // All questions have correct answers for auto scoring.
+    const quizQuestions = [
+        // 1-10: multiple choice
+        { id:1, type:"mc", text:"What is the primary purpose of an algorithm?", options:["Write code","Ordered sequence to solve a problem","Test a program","Draw logic"], correct:"Ordered sequence to solve a problem" },
+        { id:2, type:"mc", text:"Which phase involves writing code in a language like C++?", options:["Problem-Solving","Algorithm Design","Implementation","Testing"], correct:"Implementation" },
+        { id:3, type:"mc", text:"Artificial and informal language to develop algorithms?", options:["Flowchart","Pseudocode","Compiler","Machine Code"], correct:"Pseudocode" },
+        { id:4, type:"mc", text:"Flowchart symbol for decision?", options:["Rectangle","Parallelogram","Circle","Diamond"], correct:"Diamond" },
+        { id:5, type:"mc", text:"Which control structure executes instructions in order?", options:["Decision","Loop","Sequence","Case"], correct:"Sequence" },
+        { id:6, type:"mc", text:"What do Start/Stop symbols represent?", options:["Input/Output","Beginning and end of logic","Decision","Loop"], correct:"Beginning and end of logic" },
+        { id:7, type:"mc", text:"An algorithm must be:", options:["Ambiguous","Infinite","Unordered","Finite"], correct:"Finite" },
+        { id:8, type:"mc", text:"Repeat instructions 10 times uses which structure?", options:["Sequence","Decision","Loop","Case"], correct:"Loop" },
+        { id:9, type:"mc", text:"if-then-else is example of:", options:["Sequence","Decision","Loop","Case"], correct:"Decision" },
+        { id:10, type:"mc", text:"Key rule for proper flowchart:", options:["Multiple starts","Step with no connection","Must have start and stop","Only rectangles"], correct:"Must have start and stop" },
+        // 11-20 true/false
+        { id:11, type:"tf", text:"Pseudocode is very similar to everyday English.", correct:"True" },
+        { id:12, type:"tf", text:"A flowchart is a textual representation of an algorithm.", correct:"False" },
+        { id:13, type:"tf", text:"The 'Case' control structure is also known as multi-selection.", correct:"True" },
+        { id:14, type:"tf", text:"In problem-solving phase, main focus is syntax of programming language.", correct:"False" },
+        { id:15, type:"tf", text:"GRADE ← (M1+M2+M3+M4)/4 is an assignment/calculation.", correct:"True" },
+        { id:16, type:"tf", text:"A loop control structure can repeat a block forever.", correct:"True" },
+        { id:17, type:"tf", text:"Flowchart logic flow is typically shown with arrows.", correct:"True" },
+        { id:18, type:"tf", text:"An algorithm can be created before choosing a programming language.", correct:"True" },
+        { id:19, type:"tf", text:"Rectangle symbol is used for input/output operations.", correct:"False" },
+        { id:20, type:"tf", text:"A decision control structure always has two or more possible paths.", correct:"True" },
+        // 21-30 identification
+        { id:21, type:"ident", text:"Graphical diagram that shows logic solution of a program.", correct:"flowchart" },
+        { id:22, type:"ident", text:"Symbol used in flowchart to represent input/output operation.", correct:"parallelogram" },
+        { id:23, type:"ident", text:"Control structure used to choose from one of many branches based on value.", correct:"case" },
+        { id:24, type:"ident", text:"Phase where you produce ordered sequence of steps.", correct:"problem-solving phase" },
+        { id:25, type:"ident", text:"Flowchart symbol representing a process or calculation.", correct:"rectangle" },
+        { id:26, type:"ident", text:"Process of walking through an algorithm manually to check for errors.", correct:"desk checking" },
+        { id:27, type:"ident", text:"Control structure that executes instructions sequentially.", correct:"sequence" },
+        { id:28, type:"ident", text:"Control structure that allows a program to make a choice.", correct:"decision" },
+        { id:29, type:"ident", text:"Informal language that helps programmers develop algorithms.", correct:"pseudocode" },
+        { id:30, type:"ident", text:"Sequence of steps that solves a problem.", correct:"algorithm" },
+        // 31-40 flowchart analysis (short answer)
+        { id:31, type:"short", text:"[Flowchart] First action in even/odd flowchart (read number) – what does it do?", correct:"input number" },
+        { id:32, type:"short", text:"Purpose of diamond symbol in even/odd flowchart.", correct:"decision" },
+        { id:33, type:"short", text:"If input number is 5 in even/odd flowchart, output is?", correct:"ODD" },
+        { id:34, type:"short", text:"If input number is 10 in even/odd flowchart, output is?", correct:"EVEN" },
+        { id:35, type:"short", text:"Even/odd flowchart determines if number is ____.", correct:"even or odd" },
+        { id:36, type:"short", text:"Purpose of parallelogram in average flowchart.", correct:"input marks" },
+        { id:37, type:"short", text:"Main calculation in rectangle of average flowchart.", correct:"average" },
+        { id:38, type:"short", text:"Passing grade threshold in example.", correct:"75" },
+        { id:39, type:"short", text:"If marks: 80,85,90,95 → output?", correct:"PASSED" },
+        { id:40, type:"short", text:"If marks: 60,65,70,75 → output?", correct:"FAILED" },
+        // 41-50 short answer (general)
+        { id:41, type:"short", text:"Difference between pseudocode and flowchart.", correct:"pseudocode text based flowchart graphical" },
+        { id:42, type:"short", text:"Why develop algorithm before writing code?", correct:"focus on logic without syntax" },
+        { id:43, type:"short", text:"Two main phases of program development.", correct:"problem solving and implementation" },
+        { id:44, type:"short", text:"Real-world example of decision control structure.", correct:"if traffic light red stop" },
+        { id:45, type:"short", text:"Real-world example of loop control structure.", correct:"while pages left read" },
+        { id:46, type:"short", text:"Meaning of 'refine the algorithm successively'.", correct:"break into detailed steps" },
+        { id:47, type:"short", text:"Why all steps in flowchart must connect?", correct:"ensure complete path from start to stop" },
+        { id:48, type:"short", text:"Purpose of case control structure.", correct:"multi-selection from value" },
+        { id:49, type:"short", text:"How average of four marks calculated in example.", correct:"sum and divide by 4" },
+        { id:50, type:"short", text:"What happens if GRADE < 75 is false in example?", correct:"print PASSED" },
+        // we have 50 questions now, add more from earlier? Up to 70? Add some extra to hit 70 (including extra short/ident)
+        { id:51, type:"ident", text:"Control structure that repeats a block of code while condition true.", correct:"loop" },
+        { id:52, type:"ident", text:"Shape used for start/stop in flowchart.", correct:"oval" },
+        { id:53, type:"mc", text:"Which of the following is NOT a control structure?", options:["Sequence","Loop","Variable","Decision"], correct:"Variable" },
+        { id:54, type:"tf", text:"A flowchart can have multiple stop points but only one start.", correct:"False" },
+        { id:55, type:"short", text:"What does the discriminant determine in quadratic equation?", correct:"nature of roots" },
+        { id:56, type:"mc", text:"In flowcharts, what does an arrow represent?", options:["Data storage","Control flow","Input","Output"], correct:"Control flow" },
+        { id:57, type:"ident", text:"Keyword used in p
